@@ -2,40 +2,35 @@
 const nav = document.querySelector('#header nav');
 const toggle = document.querySelectorAll('nav .toggle');
 
-for(const element of toggle){
-    element.addEventListener('click', function() {
+toggle.forEach(element => {
+    element.addEventListener('click', () => {
         nav.classList.toggle('show');
     });
-}
+});
 
 /* Ao clicar em algum link fecha o menu */
 const links = document.querySelectorAll('nav ul li a');
 
-for(const link of links){
-    link.addEventListener('click', function(){
+links.forEach(link => {
+    link.addEventListener('click', () => {
         nav.classList.remove('show');
-    })
-}
+    });
+});
 
 /* Mudar o header ao dar scroll */
 const header = document.querySelector('#header');
 const navHeight = header.offsetHeight;
 
-function changeHeaderWhenScroll(){
+const changeHeaderWhenScroll = () => {
+    header.classList.toggle('scroll', window.scrollY >= navHeight);
+};
 
-    if(this.window.scrollY >= navHeight){
-        header.classList.add('scroll');
-    }else{
-        header.classList.remove('scroll');
-    }
-}
-
-/* Testimonials Com Swipwerjs */
+/* Testimonials com SwiperJS */
 const swiper = new Swiper('.swiper-container', {
     slidesPerView: 1,
     loop: true,
     pagination: {
-      el: '.swiper-pagination'
+        el: '.swiper-pagination',
     },
     autoplay: {
         delay: 3000,
@@ -44,72 +39,57 @@ const swiper = new Swiper('.swiper-container', {
     keyboard: true,
     effect: 'fade',
     fadeEffect: {
-      crossFade: true
+        crossFade: true,
     },
-})
+});
 
 /* ScrollReveal */
 const scrollReveal = ScrollReveal({
     origin: 'top',
     distance: '30px',
     duration: 700,
-    reset: true
-})
-  
+    reset: true,
+});
+
 scrollReveal.reveal(
     `#home .image, #home .text,
     #about .image, #about .text,
     #services header, #services .card,
-    #testimonials header, #testimonials .testimonials
+    #testimonials header, #testimonials .testimonials,
     #contact .text, #contact .links,
     footer .brand, footer .social,
-    .divider-1, .divider-2
-    `,
+    .divider-1, .divider-2`,
     { interval: 100 }
 );
 
 /* Voltar ao topo */
 const backToTopButton = document.querySelector('.back-to-top');
 
-function backToTop(){
-    if(window.scrollY >= 560){
-        backToTopButton.classList.add('show');
-    }else{
-        backToTopButton.classList.remove('show');
-    }
-}
+const backToTop = () => {
+    backToTopButton.classList.toggle('show', window.scrollY >= 560);
+};
 
 /* Menu ativo */
 const sections = document.querySelectorAll('main section[id]');
-function activateMenuAtCurrentSection(){
 
+const activateMenuAtCurrentSection = () => {
     const checkpoint = window.pageYOffset + (window.innerHeight / 8) * 4;
 
-    for(const section of sections){
+    sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.offsetHeight;
         const sectionId = section.getAttribute('id');
 
-        const checkpointStart = checkpoint >= sectionTop;
-        const checkpointEnd = checkpoint <= sectionTop + sectionHeight;
+        const isActive = checkpoint >= sectionTop && checkpoint <= sectionTop + sectionHeight;
 
-        if(checkpointStart && checkpointEnd){
-            document
-            .querySelector('nav ul li a[href*=' + sectionId + ']')
-            .classList.add('active');
+        document
+            .querySelector(`nav ul li a[href*="${sectionId}"]`)
+            .classList.toggle('active', isActive);
+    });
+};
 
-        } else {
-            document
-            .querySelector('nav ul li a[href*=' + sectionId + ']')
-            .classList.remove('active');
-        }
-    }
-
-
-}
-
-/* when scroll */
-window.addEventListener('scroll', function(){
+/* Evento de scroll */
+window.addEventListener('scroll', () => {
     changeHeaderWhenScroll();
     backToTop();
     activateMenuAtCurrentSection();
